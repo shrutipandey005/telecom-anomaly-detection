@@ -1,0 +1,37 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run Full Telecom Anomaly Pipeline",
+            "type": "shell",
+            "command": "C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python312\\python.exe run.py",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Run Daily Batch Scoring",
+            "type": "shell",
+            "command": "C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python312\\python.exe src/batch_scoring.py",
+            "problemMatcher": []
+        },
+        {
+            "label": "Run Unit Test Suite",
+            "type": "shell",
+            "command": "C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python312\\python.exe -m unittest discover -s tests",
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Launch Review Dashboard",
+            "type": "shell",
+            "command": "C:\\Users\\User\\AppData\\Local\\Programs\\Python\\Python312\\python.exe dashboard/app.py",
+            "problemMatcher": []
+        }
+    ]
+}

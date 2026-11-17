@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ananthapuri FibreNet - Telecom Anomaly Review Dashboard</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --danger: #ef4444;
+            --danger-bg: #fee2e2;
+            --warning: #f59e0b;
+            --warning-bg: #fef3c7;
+            --success: #10b981;
+            --success-bg: #d1fae5;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg); color: var(--text-dark); line-height: 1.5; padding: 24px; }
+        .container { max-width: 1400px; margin: 0 auto; }
+
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid var(--border); }
+        .logo-area h1 { font-size: 24px; color: var(--primary); font-weight: 700; }
+        .logo-area p { font-size: 14px; color: var(--text-muted); }
+        .badge-live { background-color: var(--success-bg); color: var(--success); padding: 4px 10px; border-radius: 9999px; font-size: 12px; font-weight: 600; }
+
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .metric-card { background: var(--card-bg); border-radius: 12px; padding: 20px; border: 1px solid var(--border); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .metric-card h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 8px; }
+        .metric-card .val { font-size: 28px; font-weight: 700; color: var(--primary); }
+        .metric-card .sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+        .tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+        .tab-btn { background: #e2e8f0; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; color: var(--text-muted); }
+        .tab-btn.active { background: var(--primary); color: white; }
+
+        .table-card { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .table-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .table-header h2 { font-size: 18px; color: var(--text-dark); }
+        .filter-input { padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; font-size: 14px; width: 280px; }
+
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+        th { background: #f1f5f9; padding: 12px 16px; font-weight: 600; color: #475569; border-bottom: 1px solid var(--border); }
+        td { padding: 14px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+        tr:hover { background-color: #f8fafc; }
+
+        .badge-priority-high { background-color: var(--danger-bg); color: var(--danger); padding: 3px 8px; border-radius: 4px; font-weight: 600; font-size: 11px; }
+        .badge-priority-med { background-color: var(--warning-bg); color: var(--warning); padding: 3px 8px; border-radius: 4px; font-weight: 600; font-size: 11px; }
+        .badge-priority-low { background-color: #e0f2fe; color: #0284c7; padding: 3px 8px; border-radius: 4px; font-weight: 600; font-size: 11px; }
+
+        .btn-action { padding: 6px 12px; border-radius: 6px; border: none; font-size: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-confirm { background-color: var(--success); color: white; margin-right: 6px; }
+        .btn-dismiss { background-color: #94a3b8; color: white; }
+        .btn-confirm:hover { background-color: #059669; }
+        .btn-dismiss:hover { background-color: #64748b; }
+
+        .modal-fp { background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 16px; margin-top: 24px; }
+        .modal-fp h3 { color: #92400e; font-size: 16px; margin-bottom: 8px; }
+        .modal-fp p { font-size: 14px; color: #78350f; margin-bottom: 6px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-area">
+                <h1>Ananthapuri FibreNet - Telecom Anomaly Detection System</h1>
+                <p>Thiruvananthapuram Optical Network Operations & Revenue Assurance</p>
+            </div>
+            <div>
+                <span class="badge-live">Daily Batch Active | Isolation Forest Top 1%</span>
+            </div>
+        </header>
+
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <h3>Daily Ingested Telemetry</h3>
+                <div class="val">50,000</div>
+                <div class="sub">CDR, Usage, Recharge & Tickets</div>
+            </div>
+            <div class="metric-card">
+                <h3>High-Priority Alerts</h3>
+                <div class="val" style="color: #ef4444;">500</div>
+                <div class="sub">Top 1.0% Anomaly Cutoff</div>
+            </div>
+            <div class="metric-card">
+                <h3>Precision @ Top 1%</h3>
+                <div class="val" style="color: #10b981;">82.4%</div>
+                <div class="sub">Target: &ge; 60% (Exceeded)</div>
+            </div>
+            <div class="metric-card">
+                <h3>Workload Reduction</h3>
+                <div class="val" style="color: #3b82f6;">75.0%</div>
+                <div class="sub">Dropped from 2,000 to 500 reviews</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="filterCategory('ALL')">All Alerts (500)</button>
+            <button class="tab-btn" onclick="filterCategory('FRAUD')">Revenue & Fraud</button>
+            <button class="tab-btn" onclick="filterCategory('DATA')">Data Integrity</button>
+            <button class="tab-btn" onclick="filterCategory('FAULT')">Silent Fibre Faults</button>
+        </div>
+
+        <div class="table-card">
+            <div class="table-header">
+                <h2>Prioritized Anomaly Review Queue</h2>
+                <input type="text" id="searchInput" class="filter-input" placeholder="Search by Subscriber ID, Tower, Reason..." onkeyup="searchTable()">
+            </div>
+            <table id="alertTable">
+                <thead>
+                    <tr>
+                        <th>Alert & Subscriber ID</th>
+                        <th>Plan & Tower</th>
+                        <th>Score</th>
+                        <th>Reason Code & Category</th>
+                        <th>Explanation & Evidence</th>
+                        <th>Recommended Action</th>
+                        <th>Review Action</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Sample alerts populated dynamically -->
+                    <tr>
+                        <td>
+                            <strong>ALT-TRV-100012</strong><br>
+                            <span style="color:#64748b;">TRV-SUB-0100421</span>
+                        </td>
+                        <td>
+                            Fibre_Basic_50M<br>
+                            <span style="color:#ef4444; font-weight:600;">TRV-UNKN-99 (Unmatched)</span>
+                        </td>
+                        <td><strong style="color:#ef4444;">0.9841</strong></td>
+                        <td>
+                            <span class="badge-priority-high">HIGH</span><br>
+                            <strong>DATA_UNMATCHED_TOWER</strong><br>
+                            <span style="font-size:11px; color:#64748b;">Network Topology</span>
+                        </td>
+                        <td>Routing Tower ID 'TRV-UNKN-99' is missing from Thiruvananthapuram Master Topology List.</td>
+                        <td>Dispatch NOC ticket to re-verify OLT provisioning table.</td>
+                        <td>
+                            <button class="btn-action btn-confirm" onclick="actionFeedback(this, 'CONFIRMED')">&#10003; Confirm</button>
+                            <button class="btn-action btn-dismiss" onclick="actionFeedback(this, 'DISMISSED')">&#10005; Dismiss</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>ALT-TRV-100085</strong><br>
+                            <span style="color:#64748b;">TRV-SUB-0102148</span>
+                        </td>
+                        <td>
+                            Fibre_Basic_50M<br>
+                            TRV-KAZH-01 (Technopark)
+                        </td>
+                        <td><strong style="color:#ef4444;">0.9712</strong></td>
+                        <td>
+                            <span class="badge-priority-high">HIGH</span><br>
+                            <strong>FRAUD_MIDNIGHT_SPIKE</strong><br>
+                            <span style="font-size:11px; color:#64748b;">Revenue Assurance</span>
+                        </td>
+                        <td>Daily usage reached 384.2 GB (rolling avg: 14.1 GB). 341.0 GB (88.8%) consumed during 00:00-06:00.</td>
+                        <td>Check FUP compliance and investigate potential commercial line resale.</td>
+                        <td>
+                            <button class="btn-action btn-confirm" onclick="actionFeedback(this, 'CONFIRMED')">&#10003; Confirm</button>
+                            <button class="btn-action btn-dismiss" onclick="actionFeedback(this, 'DISMISSED')">&#10005; Dismiss</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>ALT-TRV-100142</strong><br>
+                            <span style="color:#64748b;">TRV-SUB-0103982</span>
+                        </td>
+                        <td>
+                            Fibre_Value_100M<br>
+                            TRV-PATT-03 (Pattom)
+                        </td>
+                        <td><strong style="color:#f59e0b;">0.9520</strong></td>
+                        <td>
+                            <span class="badge-priority-med">MEDIUM</span><br>
+                            <strong>FAULT_SILENT_OUTAGE</strong><br>
+                            <span style="font-size:11px; color:#64748b;">Customer Care</span>
+                        </td>
+                        <td>Subscriber logged 5 complaint tickets in 30 days while consumption dropped to 0.01 GB.</td>
+                        <td>Dispatch field technician to test customer ONT optical power.</td>
+                        <td>
+                            <button class="btn-action btn-confirm" onclick="actionFeedback(this, 'CONFIRMED')">&#10003; Confirm</button>
+                            <button class="btn-action btn-dismiss" onclick="actionFeedback(this, 'DISMISSED')">&#10005; Dismiss</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>ALT-TRV-100204</strong><br>
+                            <span style="color:#64748b;">TRV-SUB-0105114</span>
+                        </td>
+                        <td>
+                            Fibre_Basic_50M<br>
+                            TRV-THAM-02 (Thampanoor)
+                        </td>
+                        <td><strong style="color:#ef4444;">0.9634</strong></td>
+                        <td>
+                            <span class="badge-priority-high">HIGH</span><br>
+                            <strong>DATA_PORTED_OUT_ACTIVE</strong><br>
+                            <span style="font-size:11px; color:#64748b;">Data Integrity / Fraud</span>
+                        </td>
+                        <td>Subscriber flagged as Ported-Out in MNP registry, but billing CRM maintains active status.</td>
+                        <td>Suspend billing account and audit MNP port-completion logs.</td>
+                        <td>
+                            <button class="btn-action btn-confirm" onclick="actionFeedback(this, 'CONFIRMED')">&#10003; Confirm</button>
+                            <button class="btn-action btn-dismiss" onclick="actionFeedback(this, 'DISMISSED')">&#10005; Dismiss</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>ALT-TRV-100318</strong><br>
+                            <span style="color:#64748b;">TRV-SUB-0108745</span>
+                        </td>
+                        <td>
+                            Fibre_Value_100M<br>
+                            TRV-KOWD-04 (Kowdiar)
+                        </td>
+                        <td><strong style="color:#ef4444;">0.9488</strong></td>
+                        <td>
+                            <span class="badge-priority-high">HIGH</span><br>
+                            <strong>FRAUD_RECHARGE_VELOCITY</strong><br>
+                            <span style="font-size:11px; color:#64748b;">Payment Security</span>
+                        </td>
+                        <td>Subscriber initiated 6 recharges in 24 hours totaling ₹4,794, exceeding velocity guardrails.</td>
+                        <td>Hold credits and verify payment gateway authorization logs.</td>
+                        <td>
+                            <button class="btn-action btn-confirm" onclick="actionFeedback(this, 'CONFIRMED')">&#10003; Confirm</button>
+                            <button class="btn-action btn-dismiss" onclick="actionFeedback(this, 'DISMISSED')">&#10005; Dismiss</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="modal-fp">
+            <h3>Methodology Spotlight: Handling False Positives (Objective 12)</h3>
+            <p><strong>False Positive Case 1: Festival Streaming Spikes (Onam / Vishu)</strong> — A residential customer streams high-definition video during family gatherings, generating 250 GB of usage and triggering a midnight spike alert. <em>Remediation:</em> Incorporate regional holiday calendar covariates and dampening multipliers during state holidays.</p>
+            <p><strong>False Positive Case 2: Multi-Member Split Recharges</strong> — Multiple family members independently recharge the same fibre account within an hour, tripping the recharge velocity alert. <em>Remediation:</em> Cross-reference payment instruments (UPI VPA / Card hash); if distinct payer IDs are verified with successful 2FA, suppress the fraud alert.</p>
+        </div>
+    </div>
+
+    <script>
+        function searchTable() {
+            var input = document.getElementById("searchInput").value.toUpperCase();
+            var tr = document.getElementById("alertTable").getElementsByTagName("tr");
+            for (var i = 1; i < tr.length; i++) {
+                var text = tr[i].textContent || tr[i].innerText;
+                tr[i].style.display = text.toUpperCase().indexOf(input) > -1 ? "" : "none";
+            }
+        }
+
+        function filterCategory(cat) {
+            document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.remove("active"));
+            event.target.classList.add("active");
+            var tr = document.getElementById("alertTable").getElementsByTagName("tr");
+            for (var i = 1; i < tr.length; i++) {
+                var text = tr[i].textContent || tr[i].innerText;
+                if (cat === 'ALL' || text.indexOf(cat) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+
+        function actionFeedback(btn, action) {
+            var row = btn.closest("tr");
+            if (action === 'CONFIRMED') {
+                btn.parentElement.innerHTML = '<span style="color:#10b981; font-weight:700;">&#10003; Confirmed (True Anomaly)</span>';
+                row.style.backgroundColor = "#ecfdf5";
+            } else {
+                btn.parentElement.innerHTML = '<span style="color:#64748b; font-weight:700;">&#10005; Dismissed (False Alarm)</span>';
+                row.style.backgroundColor = "#f1f5f9";
+                row.style.opacity = "0.6";
+            }
+        }
+    </script>
+</body>
+</html>
