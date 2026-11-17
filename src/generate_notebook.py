@@ -6,7 +6,11 @@ Outputs a production-grade, reproducible Jupyter Notebook.
 import os
 import json
 
-NOTEBOOK_PATH = r"C:\Users\User\.gemini\antigravity\scratch\telecom_anomaly_detection\notebooks\Telecom_Anomaly_Detection.ipynb"
+NOTEBOOK_PATH = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+    "notebooks",
+    "Telecom_Anomaly_Detection.ipynb",
+)
 
 
 def make_cell(cell_type, source, outputs=None):
